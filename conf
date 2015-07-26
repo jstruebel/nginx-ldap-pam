@@ -1,0 +1,16 @@
+#!/bin/bash -ex
+install()
+{
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y \
+        -o DPkg::Options::=--force-confdef \
+        -o DPkg::Options::=--force-confold \
+        install $@
+}
+
+# add nginx ldap configurations to pam
+CONF=/etc/pam.d/nginx
+sed -i "s|@include common-account|# The default ordering in common-account did not allow nginx authentication to succeed.\n#@include common-account\naccount [success=2 new_authtok_reqd=done default=ignore] pam_unix.so\naccount [success=1 new_authtok_reqd=done ignore=ignore user_unknown=ignore authinfo_unavail=ignore default=bad] pam_ldap.so minimum_uid=1000\naccount requisite pam_deny.so\naccount required  pam_permit.so|" $CONF
+
+# remove webserver user from shadow group to improve security
+usermod -G "" www-data

@@ -1,0 +1,6 @@
+[submodule "patches/01core-ldap"]
+	path = patches/01core-ldap
+	url = https://github.com/jstruebel/core-ldap.git
+[submodule "patches/02nginx-pam"]
+	path = patches/02nginx-pam
+	url = https://github.com/jstruebel/nginx-pam.git
